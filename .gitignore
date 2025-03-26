@@ -1,0 +1,14 @@
+/frontend/node_modules/
+/frontend/builds
+
+
+# macOS
+.DS_Store
+.idea
+.env
+.env.local
+
+# Backend 
+!.gitkeep
+/backend/node_modules
+.vercel
