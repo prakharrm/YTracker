@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import logo from "../Ytracker logo.png";
 import ProfileModal from "./ProfileModal";
-import { initializeAuthListener } from "../utils/user";
+import { auth, db } from "../firebase-config";
 
 function Navbar({ onSignInClick }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setLoading] = useState(true);
+  const user = auth.currentUser;
+  
 
-  useEffect(() => {
-    
-    const unsubscribe = initializeAuthListener(setUser, setLoading);
-
-    return () => unsubscribe(); 
-  }, []);
+  
 
   return (
     <nav className="">
@@ -23,7 +18,7 @@ function Navbar({ onSignInClick }) {
             YTracker
           </span>
         </a>
-        {isLoading ? null : (
+        
           <div className="left-0">
             {user?.photoURL ? (
               <ProfileModal photoURL={user.photoURL}/>
@@ -37,7 +32,7 @@ function Navbar({ onSignInClick }) {
               </button>
             )}
           </div>
-        )}
+        
       </div>
     </nav>
   );

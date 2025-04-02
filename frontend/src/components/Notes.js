@@ -1,14 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Plus, Trash2 } from "lucide-react";
-
-function Note({ note, onChange, onDelete, isExpanded, setExpandedIndex, index }) {
+import { getNotes, trackNotes } from "../utils/notes";
+function Note({
+  note,
+  onChange,
+  onDelete,
+  isExpanded,
+  setExpandedIndex,
+  index,
+}) {
   const noteRef = useRef(null);
 
-  // Detect clicks outside to collapse the note
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (noteRef.current && !noteRef.current.contains(event.target)) {
-        setExpandedIndex(null); // Collapse the note if clicked outside
+        setExpandedIndex(null); 
       }
     };
 
@@ -29,17 +36,17 @@ function Note({ note, onChange, onDelete, isExpanded, setExpandedIndex, index })
       }`}
       onClick={() => setExpandedIndex(index)}
     >
-      {/* Timestamp at top-right */}
+ 
       <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-md">
         {note.timestamp}
       </div>
 
-      {/* Delete Button (Only visible when expanded) */}
+    
       {isExpanded && (
         <button
           className="absolute bottom-3 right-3 text-red-400 hover:text-red-500"
           onClick={(e) => {
-            e.stopPropagation(); // Prevent collapsing when clicking delete
+            e.stopPropagation(); 
             onDelete();
           }}
         >
@@ -47,51 +54,59 @@ function Note({ note, onChange, onDelete, isExpanded, setExpandedIndex, index })
         </button>
       )}
 
-      {/* Editable Title */}
+
       <input
         type="text"
         value={note.title}
         onChange={(e) => onChange("title", e.target.value)}
-        className={`text-lg font-semibold text-gray-300 bg-transparent outline-none resize-none ${
-          isExpanded ? "" : "line-clamp-1"
+        onInput={(e) => {
+          e.target.style.height = "auto"; 
+          e.target.style.height = e.target.scrollHeight + "px";
+        }}
+        className={`text-lg font-semibold text-gray-300 bg-transparent outline-none resize-none overflow-hidden ${
+          isExpanded ? "" : "line-clamp-3"
         }`}
-        placeholder="Enter title..."
+        placeholder="Enter Title"
       />
 
-      {/* Editable Content */}
       <textarea
+        type="text"
         value={note.content}
         onChange={(e) => onChange("content", e.target.value)}
-        className={`text-gray-400 text-sm mt-2 bg-transparent outline-none resize-none ${
-          isExpanded ? "" : "line-clamp-2"
+        onInput={(e) => {
+          e.target.style.height = "auto"; 
+          e.target.style.height = e.target.scrollHeight + "px"; 
+        }}
+        className={`text-gray-400 text-sm mt-2 bg-transparent outline-none resize-none overflow-hidden ${
+          isExpanded ? "" : "line-clamp-5"
         }`}
-        placeholder="Enter content..."
+        placeholder="Enter content"
       />
     </div>
   );
 }
 
-function Notes({ player }) {
+function Notes({ player, trackingId, videoId }) {
   const [notes, setNotes] = useState([]);
-  const [expandedIndex, setExpandedIndex] = useState(null); // Track which note is expanded
-
-  // Function to handle input changes
+  const [expandedIndex, setExpandedIndex] = useState(null); 
+  console.log(notes);
+  
   const handleNoteChange = (index, field, value) => {
     const updatedNotes = [...notes];
     updatedNotes[index][field] = value;
     setNotes(updatedNotes);
   };
 
-  // Function to delete a note
+
   const deleteNote = (index) => {
     const updatedNotes = notes.filter((_, i) => i !== index);
     setNotes(updatedNotes);
     if (expandedIndex === index) {
-      setExpandedIndex(null); // Collapse the note if it's being deleted
+      setExpandedIndex(null); 
     }
   };
 
-  // Function to format timestamp from seconds -> HH:MM:SS
+ 
   const formatTimestamp = (seconds) => {
     const h = Math.floor(seconds / 3600)
       .toString()
@@ -105,7 +120,7 @@ function Notes({ player }) {
     return `${h}:${m}:${s}`;
   };
 
-  // Function to add a new note with timestamp from video
+
   const addNewNote = () => {
     if (player && player.getCurrentTime) {
       const currentTime = formatTimestamp(player.getCurrentTime());
@@ -115,7 +130,7 @@ function Notes({ player }) {
         {
           title: "",
           content: "",
-          timestamp: currentTime, // Get timestamp from video
+          timestamp: currentTime, 
         },
       ]);
     } else {
@@ -123,9 +138,14 @@ function Notes({ player }) {
     }
   };
 
+
+  useEffect(()=> {
+    getNotes(trackingId, videoId, setNotes);
+    console.log("note")
+  }, [])
   return (
     <div className="relative mt-5 w-full border border-gray-500 rounded-2xl p-5">
-      {/* Header */}
+  
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl text-white">Notes</h1>
         <button
@@ -136,7 +156,7 @@ function Notes({ player }) {
         </button>
       </div>
 
-      {/* Notes Grid */}
+
       <div className="grid grid-cols-3 gap-4">
         {notes.map((note, index) => (
           <Note

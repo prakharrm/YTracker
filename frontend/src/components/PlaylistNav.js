@@ -1,10 +1,33 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"; // Import icons
-import { useEffect } from "react";
-function VideoNav(id, thumbnail, title, onSelectVideo, setFinishedVideo, finishedVideos) {
-  const isChecked = finishedVideos.includes(id);
-
+import { Progress, Typography } from "@material-tailwind/react";
+ 
+export function ProgressLabelOutside() {
   return (
-    <div key={id} className="flex hover:bg-gray-700 rounded-md cursor-pointer">
+    <div className="w-full">
+      <div className="mb-2 flex items-center justify-between gap-4">
+        <Typography color="blue-gray" variant="h6">
+          Completed
+        </Typography>
+        <Typography color="blue-gray" variant="h6">
+          50%
+        </Typography>
+      </div>
+      <Progress value={50} />
+    </div>
+  );
+}
+function VideoNav(
+  id,
+  thumbnail,
+  title,
+  onSelectVideo,
+  setFinishedVideo,
+  finishedVideos,
+  selectedVideo
+) {
+  const isChecked = finishedVideos.includes(id);
+  return (
+    <div key={id} className={`flex hover:bg-gray-700 rounded-md cursor-pointer ${id === selectedVideo? `bg-gray-700`: ``} `}>
       <div className="flex items-center pl-2">
         <input
           type="checkbox"
@@ -12,9 +35,7 @@ function VideoNav(id, thumbnail, title, onSelectVideo, setFinishedVideo, finishe
           checked={isChecked}
           onChange={() => {
             setFinishedVideo((prev) =>
-              isChecked
-                ? prev.filter((elm) => elm !== id) 
-                : [...prev, id] 
+              isChecked ? prev.filter((elm) => elm !== id) : [...prev, id]
             );
           }}
         />
@@ -45,7 +66,6 @@ function VideoNav(id, thumbnail, title, onSelectVideo, setFinishedVideo, finishe
   );
 }
 
-
 function PlaylistNav({
   onSelectVideo,
   paginatedPlaylistData,
@@ -54,25 +74,50 @@ function PlaylistNav({
   prevPage,
   handlePageChange,
   finishedVideos,
-  setFinishedVideo
+  setFinishedVideo,
+  totalVideos,
+  selectedVideo
 }) {
   const videoList = paginatedPlaylistData;
-  console.log("dataaa", videoList);
-  console.log("next", nextPage);
-  console.log("prev", prevPage);
-
+  console.log(finishedVideos.length)
+  console.log(totalVideos)
+  const  progress = Math.floor((finishedVideos.length/totalVideos) * 100)
   return (
     <div
       style={{ height: "720px" }}
       className="parent flex flex-col h-[720px] w-full max-w-2xl ml-6 border border-gray-500 rounded-2xl bg-[#121212]"
     >
-      {/* Header */}
-      <div className="h-24 bg-[#212121] rounded-t-2xl shrink-0"></div>
+      
+     { totalVideos && <div className="flex items-center justify-between px-4 h-24 bg-[#212121] rounded-t-2xl shrink-0">
+        <div>
+          <p className="text-lg">Progress</p>
+        </div>
+
+        
+        <div
+          className="radial-progress"
+          style={
+            { "--value": 100, color: "white" } /* as React.CSSProperties */
+          }
+          aria-valuenow={progress}
+          role="progressbar"
+        >
+          <span>{progress}</span>%
+        </div>
+      </div>}
 
       {/* Scrollable Video List */}
       <div className="scroller flex-1 overflow-y-auto py-5 p-4">
         {videoList?.map((video) =>
-          VideoNav(video.id, video.thumbnail?.url, video.title, onSelectVideo, setFinishedVideo, finishedVideos)
+          VideoNav(
+            video.id,
+            video.thumbnail?.url,
+            video.title,
+            onSelectVideo,
+            setFinishedVideo,
+            finishedVideos,
+            selectedVideo
+          )
         )}
 
         {(nextPage || prevPage) && (
@@ -87,7 +132,6 @@ function PlaylistNav({
                 setToken(prevPage);
                 handlePageChange();
               }}
-
               disabled={prevPage == null}
             >
               <ChevronLeft className="text-gray-400" size={24} />
@@ -103,7 +147,6 @@ function PlaylistNav({
                 handlePageChange();
               }}
               disabled={nextPage == null}
-              
             >
               <ChevronRight className="text-gray-400" size={24} />
             </button>

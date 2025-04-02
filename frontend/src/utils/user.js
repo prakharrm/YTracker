@@ -38,3 +38,17 @@ export const handleUserUuid = async (user) => {
 };
 
 
+export const profile = async() => {
+  const user = auth.currentUser;
+
+  if (!user) {
+    console.error("user not found");
+  }
+
+  const userDocRef = doc(db, "user-info", user.uid);
+  const docSnap = await getDoc(userDocRef);
+  const data = docSnap.data();
+  
+  return data;
+
+}

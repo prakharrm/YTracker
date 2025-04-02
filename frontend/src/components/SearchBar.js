@@ -17,10 +17,8 @@ function SearchBar({ ensureAuth}) {
     setResponse(result);
 
     if (response?.success) {
-      // navigating to tracker page
-      navigate(`/tracker/${result.trackingId}`, {
-        state: { playlistId: result.playlistId, trackingId: result.trackingId }, 
-      });
+      
+      navigate(`/tracker/${result.trackingId}`);
 
     }
   };

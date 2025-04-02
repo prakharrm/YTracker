@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SearchBar from "../components/SearchBar";
 import { initializeAuthListener } from "../utils/user";
+import Profile from "../components/Profile";
 
 function Home({ensureAuth}) {
  
@@ -20,6 +21,10 @@ function Home({ensureAuth}) {
       </div>
       <div className="w-full flex justify-center">
         <SearchBar ensureAuth={ensureAuth}/>
+      </div>
+      <div className="w-full px-6">
+        
+        <Profile />
       </div>
     </div>
   );

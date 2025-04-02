@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@plugin "daisyui";
+
 body {
     background-color: #181818;
     font-family: "Roboto", serif;
