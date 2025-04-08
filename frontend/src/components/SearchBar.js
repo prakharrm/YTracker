@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { FaArrowRight } from "react-icons/fa"; // Using Font Awesome
+import { FaArrowRight } from "react-icons/fa"; 
 import { trackeNewPlaylist } from "../utils/playlist";
 import { useNavigate } from "react-router-dom";
 
-function SearchBar({ ensureAuth}) {
+function SearchBar({ ensureAuth }) {
   const [playlistURI, setplaylistURI] = useState("");
   const [response, setResponse] = useState(null);
   const navigate = useNavigate();
@@ -16,9 +16,9 @@ function SearchBar({ ensureAuth}) {
     const result = await trackeNewPlaylist(playlistURI, ensureAuth);
     setResponse(result);
 
-if (result?.success) {
-  navigate(`/tracker/${result.trackingId}`);
-}
+    if (result?.success) {
+      navigate(`/tracker/${result.trackingId}`);
+    }
   };
 
   return (
@@ -38,10 +38,9 @@ if (result?.success) {
         >
           <FaArrowRight size={24} />
         </button>
-        
       </div>
       <div>
-      {response?.message && (
+        {response?.message && (
           <p
             style={{
               color: response?.success ? "green" : "red",
@@ -51,7 +50,6 @@ if (result?.success) {
             {response.message}
           </p>
         )}
-
       </div>
     </div>
   );

@@ -18,7 +18,8 @@ router.get("/api/title", async (req, res) => {
     const queryPlaylistDetails = `https://www.googleapis.com/youtube/v3/playlists?key=${process.env.YT_API}&id=${playlistId}&part=id,contentDetails,snippet&fields=items(id,snippet(title,thumbnails),contentDetails(itemCount))`;
 
     const detailsResponse = await fetch(queryPlaylistDetails);
-    if (!detailsResponse.ok) throw new Error("Failed to fetch data from YouTube API");
+    if (!detailsResponse.ok)
+      throw new Error("Failed to fetch data from YouTube API");
 
     const data = await detailsResponse.json();
 
@@ -179,12 +180,10 @@ router.get("/summarize-video", async (req, res) => {
 
     if (!Array.isArray(summary)) {
       console.error("Summary is not an array:", summary);
-      return res
-        .status(500)
-        .json({
-          error: "Summary is not in the expected array format",
-          summary,
-        });
+      return res.status(500).json({
+        error: "Summary is not in the expected array format",
+        summary,
+      });
     }
 
     res.json(summary);

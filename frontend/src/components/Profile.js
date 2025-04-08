@@ -106,7 +106,7 @@ function Profile() {
   return (
     <>
       {profileData?.playlists && profileData.playlists.length > 0 && (
-        <div className="w-full px-6 mt-24 mb-24 ">
+        <div className="w-full px-6 mt-5 mb-24 ">
           <div className="grid grid-cols-4 gap-6">
             {profileData.playlists.map((elm) => (
               <PlaylistCard

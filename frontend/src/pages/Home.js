@@ -22,7 +22,7 @@ function Home({ensureAuth}) {
       <div className="w-full flex justify-center">
         <SearchBar ensureAuth={ensureAuth}/>
       </div>
-      <div className="w-full px-6">
+      <div className="w-full px-6 mt-24">
         
         <Profile />
       </div>
