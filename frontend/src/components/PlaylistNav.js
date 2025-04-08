@@ -79,8 +79,6 @@ function PlaylistNav({
   selectedVideo
 }) {
   const videoList = paginatedPlaylistData;
-  console.log(finishedVideos.length)
-  console.log(totalVideos)
   const  progress = Math.floor((finishedVideos.length/totalVideos) * 100)
   return (
     <div
@@ -97,7 +95,7 @@ function PlaylistNav({
         <div
           className="radial-progress"
           style={
-            { "--value": 100, color: "white" } /* as React.CSSProperties */
+            { "--value": 100, color: "white" }
           }
           aria-valuenow={progress}
           role="progressbar"
@@ -106,53 +104,51 @@ function PlaylistNav({
         </div>
       </div>}
 
-      {/* Scrollable Video List */}
-      <div className="scroller flex-1 overflow-y-auto py-5 p-4">
-        {videoList?.map((video) =>
-          VideoNav(
-            video.id,
-            video.thumbnail?.url,
-            video.title,
-            onSelectVideo,
-            setFinishedVideo,
-            finishedVideos,
-            selectedVideo
-          )
-        )}
+    
+     {
+       videoList.length > 0 && <div className="scroller flex-1 overflow-y-auto py-5 p-4">
+       {videoList?.map((video) =>
+         VideoNav(
+           video.id,
+           video.thumbnail?.url,
+           video.title,
+           onSelectVideo,
+           setFinishedVideo,
+           finishedVideos,
+           selectedVideo
+         )
+       )}
 
-        {(nextPage || prevPage) && (
-          <div className="flex justify-center gap-4 p-4 shrink-0">
-            <button
-              className={`w-12 h-12 flex items-center justify-center rounded-full ${
-                prevPage != null
-                  ? "bg-[#212121] hover:bg-[#333333]"
-                  : "bg-[#272727]"
-              }`}
-              onClick={() => {
-                setToken(prevPage);
-                handlePageChange();
-              }}
-              disabled={prevPage == null}
-            >
-              <ChevronLeft className="text-gray-400" size={24} />
-            </button>
-            <button
-              className={`w-12 h-12 flex items-center justify-center rounded-full ${
-                nextPage != null
-                  ? "bg-[#212121] hover:bg-[#333333]"
-                  : "bg-[#1D1D1D]"
-              }`}
-              onClick={() => {
-                setToken(nextPage);
-                handlePageChange();
-              }}
-              disabled={nextPage == null}
-            >
-              <ChevronRight className="text-gray-400" size={24} />
-            </button>
-          </div>
-        )}
-      </div>
+       {(nextPage || prevPage) && (
+         <div className="flex justify-center gap-4 p-4 shrink-0">
+           <button
+             className={`w-12 h-12 flex items-center justify-center rounded-full ${
+               prevPage != null
+                 ? "bg-[#212121] hover:bg-[#333333]"
+                 : "bg-[#272727]"
+             }`}
+             onClick={() => handlePageChange(prevPage)}
+
+             disabled={prevPage == null}
+           >
+             <ChevronLeft className="text-gray-400" size={24} />
+           </button>
+           <button
+             className={`w-12 h-12 flex items-center justify-center rounded-full ${
+               nextPage != null
+                 ? "bg-[#212121] hover:bg-[#333333]"
+                 : "bg-[#1D1D1D]"
+             }`}
+             onClick={() => handlePageChange(nextPage)}
+
+             disabled={nextPage == null}
+           >
+             <ChevronRight className="text-gray-400" size={24} />
+           </button>
+         </div>
+       )}
+     </div>
+     }
     </div>
   );
 }

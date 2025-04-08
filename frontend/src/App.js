@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import "./output.css";
 import Tracker from "./pages/Tracker";
+import ProfilePage from "./pages/ProfilePage";
 import { DialogWithForm } from "./components/AuthModal";
 import { initializeAuthListener } from "./utils/user"; // Fixed path
 
@@ -38,6 +39,8 @@ function App() {
         <Routes>
           <Route index element={<Home ensureAuth={openSignInModal} />} />
           <Route path="/tracker/:trackingId" element={<Tracker />} />
+          <Route path="/profile" element={<ProfilePage />} />
+
         </Routes>
       </BrowserRouter>
     </div>

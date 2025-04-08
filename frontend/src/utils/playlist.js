@@ -14,7 +14,7 @@ export const fetchPlaylistId = async (trackingId) => {
   const docSnap = await getDoc(userDocRef);
   const data = docSnap.data();
 
-  if (user.uid === data["user-id"] && docSnap.exists()) {
+  if (docSnap.exists() && user.uid === data["user-id"] ) {
     try {
       const playlist = data.playlists.find(
         (elm) => elm.trackingId === trackingId
@@ -65,7 +65,7 @@ export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
   let trackingId = uuidv4();
   const data = docSnap.data();
 
-  if (user.uid === data["user-id"] && docSnap.exists()) {
+  if (docSnap.exists() && user.uid === data["user-id"] ) {
     //checks if the playlist already exists
     const playlistExists = data.playlists.some((elm) => {
       if (elm.playlistId === playlistId) {
@@ -169,7 +169,7 @@ export const fetchNewPlaylist = async (
       }
     );
 
-    if (user.uid === data["user-id"] && userPlaylistSnap.exists()) {
+    if (userPlaylistSnap.exists()  &&  user.uid === data["user-id"] ) {
       setSelectedVideo(playlistData["currentVideo"]);
       setNextPage(playlistData["next-page"]);
       setPrevPage(playlistData["prev-page"]);

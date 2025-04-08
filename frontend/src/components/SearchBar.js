@@ -16,11 +16,9 @@ function SearchBar({ ensureAuth}) {
     const result = await trackeNewPlaylist(playlistURI, ensureAuth);
     setResponse(result);
 
-    if (response?.success) {
-      
-      navigate(`/tracker/${result.trackingId}`);
-
-    }
+if (result?.success) {
+  navigate(`/tracker/${result.trackingId}`);
+}
   };
 
   return (

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { getNotes, trackNotes } from "../utils/notes";
+import { debounce } from "lodash";
+
 function Note({
   note,
   onChange,
@@ -8,14 +10,14 @@ function Note({
   isExpanded,
   setExpandedIndex,
   index,
+  onCollapse,
 }) {
   const noteRef = useRef(null);
 
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (noteRef.current && !noteRef.current.contains(event.target)) {
-        setExpandedIndex(null); 
+        onCollapse(index); 
       }
     };
 
@@ -26,7 +28,7 @@ function Note({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isExpanded, setExpandedIndex]);
+  }, [isExpanded, onCollapse]);
 
   return (
     <div
@@ -34,7 +36,11 @@ function Note({
       className={`relative bg-[#212121] hover:bg-[#3d3d3d] p-4 rounded-xl border border-gray-600 min-h-28 flex flex-col transition-all duration-300 ease-in-out cursor-pointer ${
         isExpanded ? "h-auto" : "h-28 "
       }`}
-      onClick={() => setExpandedIndex(index)}
+      onClick={(e) => {
+        if (e.target.closest("button")) return; 
+        setExpandedIndex(index);
+      }}
+      
     >
  
       <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-md">
@@ -53,8 +59,6 @@ function Note({
           <Trash2 size={18} />
         </button>
       )}
-
-
       <input
         type="text"
         value={note.title}
@@ -89,24 +93,9 @@ function Note({
 function Notes({ player, trackingId, videoId }) {
   const [notes, setNotes] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null); 
-  console.log(notes);
-  
-  const handleNoteChange = (index, field, value) => {
-    const updatedNotes = [...notes];
-    updatedNotes[index][field] = value;
-    setNotes(updatedNotes);
-  };
 
+  const debouncedSave = useRef(null);
 
-  const deleteNote = (index) => {
-    const updatedNotes = notes.filter((_, i) => i !== index);
-    setNotes(updatedNotes);
-    if (expandedIndex === index) {
-      setExpandedIndex(null); 
-    }
-  };
-
- 
   const formatTimestamp = (seconds) => {
     const h = Math.floor(seconds / 3600)
       .toString()
@@ -119,30 +108,73 @@ function Notes({ player, trackingId, videoId }) {
       .padStart(2, "0");
     return `${h}:${m}:${s}`;
   };
-
-
+  
   const addNewNote = () => {
-    if (player && player.getCurrentTime) {
+    if (player && player.getCurrentTime && notes.length <=10) {
       const currentTime = formatTimestamp(player.getCurrentTime());
-
       setNotes([
         ...notes,
         {
           title: "",
           content: "",
-          timestamp: currentTime, 
+          timestamp: currentTime,
         },
       ]);
     } else {
       console.error("YouTube Player not initialized yet!");
     }
   };
+  
 
+  const saveNotes = () => {
+    trackNotes(trackingId, videoId, notes);
+  };
 
-  useEffect(()=> {
-    getNotes(trackingId, videoId, setNotes);
-    console.log("note")
-  }, [])
+  const debouncedTrackNotes = useRef(
+    debounce((updatedNotes) => {
+      trackNotes(trackingId, videoId, updatedNotes);
+    }, 3000)
+  ).current;
+  
+
+  const handleNoteChange = (index, field, value) => {
+    const updatedNotes = [...notes];
+    updatedNotes[index][field] = value;
+    setNotes(updatedNotes);
+  
+    if (expandedIndex === index) {
+      debouncedTrackNotes(updatedNotes); 
+    }
+  };
+  
+
+  const deleteNote = (index) => {
+    debouncedTrackNotes.flush();
+  
+    const updatedNotes = notes.filter((_, i) => i !== index);
+    setNotes(updatedNotes);
+  
+    if (expandedIndex === index) {
+      setExpandedIndex(null);
+    }
+  
+    trackNotes(trackingId, videoId, updatedNotes); 
+  };
+  
+
+  const handleCollapse = (index) => {
+    debouncedTrackNotes.flush(); 
+    setExpandedIndex(null);
+    trackNotes(trackingId, videoId, notes);
+  };
+  
+
+  useEffect(() => {
+    if (trackingId && videoId) {
+      getNotes(trackingId, videoId, setNotes);
+    }
+  }, [trackingId, videoId]);
+  
   return (
     <div className="relative mt-5 w-full border border-gray-500 rounded-2xl p-5">
   
@@ -150,7 +182,8 @@ function Notes({ player, trackingId, videoId }) {
         <h1 className="text-2xl text-white">Notes</h1>
         <button
           onClick={addNewNote}
-          className="bg-[#212121] hover:bg-[#333333] p-2 rounded-full"
+          className={`bg-[#212121] hover:bg-[#333333] p-2 rounded-full ${notes.length>=10 ? `hidden`: ``}`}
+          disabled={notes.length>=10}
         >
           <Plus className="text-gray-400 w-7 h-7" />
         </button>
@@ -159,15 +192,16 @@ function Notes({ player, trackingId, videoId }) {
 
       <div className="grid grid-cols-3 gap-4">
         {notes.map((note, index) => (
-          <Note
-            key={index}
-            note={note}
-            onChange={(field, value) => handleNoteChange(index, field, value)}
-            onDelete={() => deleteNote(index)}
-            isExpanded={expandedIndex === index}
-            setExpandedIndex={setExpandedIndex}
-            index={index}
-          />
+         <Note
+         key={index}
+         note={note}
+         onChange={(field, value) => handleNoteChange(index, field, value)}
+         onDelete={() => deleteNote(index)}
+         isExpanded={expandedIndex === index}
+         setExpandedIndex={setExpandedIndex}
+         index={index}
+         onCollapse={handleCollapse}
+       />
         ))}
       </div>
     </div>

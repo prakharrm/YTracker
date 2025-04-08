@@ -21,7 +21,6 @@ function Tracker() {
   const [currentPage, setCurrentPage] = useState(null);
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
-  const [token, setToken] = useState(null);
   const [totalVideos, setTotalVideo] = useState(null)
 
 
@@ -47,7 +46,9 @@ function Tracker() {
       }
     }
   }
-  async function handlePageChange() {
+
+  async function handlePageChange(token) {
+
     if (playlistId) {
     await changePlaylistPage(
         playlistId,
@@ -121,8 +122,9 @@ function Tracker() {
             onSelectVideo={setSelectedVideo}
             setPlayer={setPlayer}
             paginatedPlaylistData={items}
-            handlePageChange={handlePageChange}
-            setToken={setToken}
+
+            handlePageChange={handlePageChange}     
+
             finishedVideos={finishedVideos}
             setFinishedVideo={setFinishedVideo}
             totalVideos={totalVideos}
