@@ -1,8 +1,22 @@
 import { useRef, useEffect } from "react";
+
 function VideoPlayer({ id, setPlayer }) {
+  const containerRef = useRef(null);
   const iframeRef = useRef(null);
 
   useEffect(() => {
+    const resizePlayer = () => {
+      if (containerRef.current && iframeRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const height = containerWidth * (9 / 16);
+        iframeRef.current.width = containerWidth;
+        iframeRef.current.height = height;
+      }
+    };
+
+    window.addEventListener("resize", resizePlayer);
+    resizePlayer(); // Initial resize
+
     const loadYouTubeAPI = () => {
       if (!window.YT) {
         const tag = document.createElement("script");
@@ -12,7 +26,7 @@ function VideoPlayer({ id, setPlayer }) {
 
         tag.onload = () => {
           window.onYouTubeIframeAPIReady = () => {
-            const player = new window.YT.Player(iframeRef.current, {
+            new window.YT.Player(iframeRef.current, {
               events: {
                 onReady: (event) => setPlayer(event.target),
               },
@@ -20,7 +34,7 @@ function VideoPlayer({ id, setPlayer }) {
           };
         };
       } else {
-        const player = new window.YT.Player(iframeRef.current, {
+        new window.YT.Player(iframeRef.current, {
           events: {
             onReady: (event) => setPlayer(event.target),
           },
@@ -29,23 +43,24 @@ function VideoPlayer({ id, setPlayer }) {
     };
 
     loadYouTubeAPI();
+
+    return () => window.removeEventListener("resize", resizePlayer);
   }, [id, setPlayer]);
 
   return (
-    <div className="flex justify-center">
+    <div className="w-full max-w-[1280px] mx-auto relative" style={{ aspectRatio: '16/9' }}>
       <iframe
         ref={iframeRef}
-        width="1280"
-        height="720"
         src={`https://www.youtube.com/embed/${id}?enablejsapi=1&autoplay=1&rel=0`}
         title="YouTube video player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
-        className="rounded-2xl overflow-hidden"
+        className="absolute top-0 left-0 w-full h-full rounded-2xl overflow-hidden"
       ></iframe>
     </div>
   );
+  
 }
 
 export default VideoPlayer;

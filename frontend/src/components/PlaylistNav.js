@@ -1,21 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"; // Import icons
 import { Progress, Typography } from "@material-tailwind/react";
- 
-export function ProgressLabelOutside() {
-  return (
-    <div className="w-full">
-      <div className="mb-2 flex items-center justify-between gap-4">
-        <Typography color="blue-gray" variant="h6">
-          Completed
-        </Typography>
-        <Typography color="blue-gray" variant="h6">
-          50%
-        </Typography>
-      </div>
-      <Progress value={50} />
-    </div>
-  );
-}
+
 function VideoNav(
   id,
   thumbnail,
@@ -27,7 +12,12 @@ function VideoNav(
 ) {
   const isChecked = finishedVideos.includes(id);
   return (
-    <div key={id} className={`flex hover:bg-gray-700 rounded-md cursor-pointer ${id === selectedVideo? `bg-gray-700`: ``} `}>
+    <div
+      key={id}
+      className={`flex hover:bg-gray-700 rounded-md cursor-pointer ${
+        id === selectedVideo ? `bg-gray-700` : ``
+      } `}
+    >
       <div className="flex items-center pl-2">
         <input
           type="checkbox"
@@ -41,14 +31,9 @@ function VideoNav(
         />
       </div>
       <div onClick={() => onSelectVideo(id)}>
-        <div className="flex p-2 items-center justify-center">
-          <div
-            style={{
-              width: "130px",
-              height: "86px",
-            }}
-            className="flex overflow-hidden rounded-md"
-          >
+        <div className="flex p-1 items-center justify-center">
+        <div className="w-[100px] sm:w-[130px] h-[64px] sm:h-[86px] overflow-hidden rounded-md sm:rounded-xl">
+
             <img
               src={thumbnail}
               alt={title}
@@ -76,79 +61,63 @@ function PlaylistNav({
   finishedVideos,
   setFinishedVideo,
   totalVideos,
-  selectedVideo
+  selectedVideo,
 }) {
   const videoList = paginatedPlaylistData;
-  const  progress = Math.floor((finishedVideos.length/totalVideos) * 100)
+  const progress = Math.floor((finishedVideos.length / totalVideos) * 100);
   return (
-    <div
-      style={{ height: "720px" }}
-      className="parent flex flex-col h-[720px] w-full max-w-2xl ml-6 border border-gray-500 rounded-2xl bg-[#121212]"
-    >
-      
-     { totalVideos && <div className="flex items-center justify-between px-4 h-24 bg-[#212121] rounded-t-2xl shrink-0">
-        <div>
+    <div className="flex flex-col w-full h-full max-h-[calc(100vh-200px)] sm:max-h-[calc(100vh-250px)] md:max-h-[calc(100vh-200px)] border border-gray-500 rounded-md md:rounded-2xl bg-[#121212]">
+      {totalVideos && (
+        <div className="flex items-center justify-between px-4 h-50 lg:h-20 bg-[#212121] rounded-t-md md:rounded-t-2xl">
           <p className="text-lg">Progress</p>
+          <div
+            className="radial-progress"
+            style={{ "--value": progress, color: "white" }}
+            aria-valuenow={progress}
+            role="progressbar"
+          >
+            <span>{progress}</span>%
+          </div>
         </div>
+      )}
 
-        
-        <div
-          className="radial-progress"
-          style={
-            { "--value": 100, color: "white" }
-          }
-          aria-valuenow={progress}
-          role="progressbar"
-        >
-          <span>{progress}</span>%
+      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        {videoList.map((video) =>
+          VideoNav(
+            video.id,
+            video.thumbnail?.url,
+            video.title,
+            onSelectVideo,
+            setFinishedVideo,
+            finishedVideos,
+            selectedVideo
+          )
+        )}
+        {(nextPage || prevPage) && (
+        <div className="flex justify-center gap-4 py-4">
+          <button
+            className={`w-10 h-10 flex items-center justify-center rounded-full ${
+              prevPage ? "bg-[#212121] hover:bg-[#333333]" : "bg-[#272727]"
+            }`}
+            onClick={() => handlePageChange(prevPage)}
+            disabled={!prevPage}
+          >
+            <ChevronLeft className="text-gray-400" size={20} />
+          </button>
+          <button
+            className={`w-10 h-10 flex items-center justify-center rounded-full ${
+              nextPage ? "bg-[#212121] hover:bg-[#333333]" : "bg-[#1D1D1D]"
+            }`}
+            onClick={() => handlePageChange(nextPage)}
+            disabled={!nextPage}
+          >
+            <ChevronRight className="text-gray-400" size={20} />
+          </button>
         </div>
-      </div>}
+      )}
+      </div>
 
-    
-     {
-       videoList.length > 0 && <div className="scroller flex-1 overflow-y-auto py-5 p-4">
-       {videoList?.map((video) =>
-         VideoNav(
-           video.id,
-           video.thumbnail?.url,
-           video.title,
-           onSelectVideo,
-           setFinishedVideo,
-           finishedVideos,
-           selectedVideo
-         )
-       )}
-
-       {(nextPage || prevPage) && (
-         <div className="flex justify-center gap-4 p-4 shrink-0">
-           <button
-             className={`w-12 h-12 flex items-center justify-center rounded-full ${
-               prevPage != null
-                 ? "bg-[#212121] hover:bg-[#333333]"
-                 : "bg-[#272727]"
-             }`}
-             onClick={() => handlePageChange(prevPage)}
-
-             disabled={prevPage == null}
-           >
-             <ChevronLeft className="text-gray-400" size={24} />
-           </button>
-           <button
-             className={`w-12 h-12 flex items-center justify-center rounded-full ${
-               nextPage != null
-                 ? "bg-[#212121] hover:bg-[#333333]"
-                 : "bg-[#1D1D1D]"
-             }`}
-             onClick={() => handlePageChange(nextPage)}
-
-             disabled={nextPage == null}
-           >
-             <ChevronRight className="text-gray-400" size={24} />
-           </button>
-         </div>
-       )}
-     </div>
-     }
+      
     </div>
   );
 }

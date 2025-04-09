@@ -14,7 +14,7 @@ export const fetchPlaylistId = async (trackingId) => {
   const docSnap = await getDoc(userDocRef);
   const data = docSnap.data();
 
-  if (docSnap.exists() && user.uid === data["user-id"] ) {
+  if (docSnap.exists() && user.uid === data["user-id"]) {
     try {
       const playlist = data.playlists.find(
         (elm) => elm.trackingId === trackingId
@@ -65,7 +65,7 @@ export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
   let trackingId = uuidv4();
   const data = docSnap.data();
 
-  if (docSnap.exists() && user.uid === data["user-id"] ) {
+  if (docSnap.exists() && user.uid === data["user-id"]) {
     //checks if the playlist already exists
     const playlistExists = data.playlists.some((elm) => {
       if (elm.playlistId === playlistId) {
@@ -97,7 +97,7 @@ export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
           playlistId: playlistId,
           title: response.data.title,
           cover: response.data.cover,
-          videoCount: response.data.videoCount
+          videoCount: response.data.videoCount,
         }),
       });
       return {
@@ -119,7 +119,7 @@ export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
           playlistId: playlistId,
           title: response.data.title,
           cover: response.data.cover,
-          videoCount: response.data.videoCount
+          videoCount: response.data.videoCount,
         },
       ],
     });
@@ -146,9 +146,9 @@ export const fetchNewPlaylist = async (
   try {
     const user = auth.currentUser;
 
-  if (!user) {
-    console.error("user not found");
-  }
+    if (!user) {
+      console.error("user not found");
+    }
     const userDocRef = doc(db, "user-info", user.uid);
     const userPlaylistDocRef = doc(db, "user-playlist-info", trackingId);
 
@@ -169,7 +169,7 @@ export const fetchNewPlaylist = async (
       }
     );
 
-    if (userPlaylistSnap.exists()  &&  user.uid === data["user-id"] ) {
+    if (userPlaylistSnap.exists() && user.uid === data["user-id"]) {
       setSelectedVideo(playlistData["currentVideo"]);
       setNextPage(playlistData["next-page"]);
       setPrevPage(playlistData["prev-page"]);
@@ -237,13 +237,12 @@ export const updateTrackerState = async (
   try {
     const user = auth.currentUser;
 
-  if (!user) {
-    console.error("user not found");
-  }
-    
-    
+    if (!user) {
+      console.error("user not found");
+    }
+
     const userDocRef = doc(db, "user-playlist-info", trackingId);
- 
+
     await updateDoc(userDocRef, {
       currentVideo: selectedVideo,
       "next-page": nextPage,
@@ -253,6 +252,23 @@ export const updateTrackerState = async (
       "user-id": user.uid,
       "finished-video": finishedVideos,
     });
+  } catch (err) {
+    console.error("error: ", err);
+  }
+};
+
+export const searchGemini = async (searchQuery) => {
+  const user = auth.currentUser;
+
+  if (!user) {
+    return;
+  }
+
+  try {
+    const response = await axios.get(`http://localhost:5000/search`, {
+      params: { searchQuery },
+    });
+    return response.data;
   } catch (err) {
     console.error("error: ", err);
   }

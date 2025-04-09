@@ -32,18 +32,20 @@ function App() {
   if (isLoading) return null; 
 
   return (
-    <BrowserRouter>
+   
       <div className="text-white min-h-screen">
+        <BrowserRouter>
         <Navbar onSignInClick={openSignInModal} />
         <DialogWithForm open={isSignInModalOpen} onClose={closeSignInModal} />
-
+        
         <Routes>
           <Route index element={<Home ensureAuth={openSignInModal} />} />
           <Route path="/tracker/:trackingId" element={<Tracker />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
+        </BrowserRouter>
       </div>
-    </BrowserRouter>
+   
   );
 }
 

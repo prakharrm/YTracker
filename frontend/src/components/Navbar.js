@@ -11,7 +11,7 @@ function Navbar({ onSignInClick }) {
 
   return (
     <nav className="">
-      <div className="flex flex-wrap items-center justify-between mx-auto py-4">
+      <div className="flex flex-wrap items-center justify-between  mx-auto py-4">
         <a href="/" className="flex items-center space-x-2 rtl:space-x-reverse">
           <img src={logo} className="h-10" alt="Flowbite Logo" />
           <span className="self-center text-2xl font-medium whitespace-nowrap dark:text-white">

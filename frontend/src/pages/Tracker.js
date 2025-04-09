@@ -9,6 +9,7 @@ import {
   updateTrackerState,
   fetchPlaylistId,
 } from "../utils/playlist";
+import UtilityButtons from "../components/UtilityButtons";
 
 function Tracker() {
   const { trackingId } = useParams();
@@ -21,15 +22,12 @@ function Tracker() {
   const [currentPage, setCurrentPage] = useState(null);
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
-  const [totalVideos, setTotalVideo] = useState(null)
-
-
+  const [totalVideos, setTotalVideo] = useState(null);
 
   async function loadPlaylist() {
-
     if (trackingId && playlistId) {
       try {
-       await fetchNewPlaylist(
+        await fetchNewPlaylist(
           trackingId,
           playlistId,
           setSelectedVideo,
@@ -40,7 +38,6 @@ function Tracker() {
           setFinishedVideo,
           setTotalVideo
         );
-     
       } catch (err) {
         console.error("an error occured: ", err);
       }
@@ -48,9 +45,8 @@ function Tracker() {
   }
 
   async function handlePageChange(token) {
-
     if (playlistId) {
-    await changePlaylistPage(
+      await changePlaylistPage(
         playlistId,
         token,
         setNextPage,
@@ -58,7 +54,6 @@ function Tracker() {
         setCurrentPage,
         setItems
       );
-      
     }
   }
 
@@ -72,14 +67,12 @@ function Tracker() {
     initializePlaylistId();
   }, [trackingId]);
 
-  useEffect(()=> {
+  useEffect(() => {
     loadPlaylist();
-  }, [playlistId])
+  }, [playlistId]);
 
   useEffect(() => {
-  
     if (trackingId && playlistId) {
-    
       updateTrackerState(
         trackingId,
         playlistId,
@@ -91,29 +84,30 @@ function Tracker() {
       );
     }
   }, [
-    currentPage, 
-    finishedVideos, 
-    nextPage, 
-    prevPage, 
-    selectedVideo, 
+    currentPage,
+    finishedVideos,
+    nextPage,
+    prevPage,
+    selectedVideo,
     trackingId,
     playlistId,
-    finishedVideos 
+    finishedVideos,
   ]);
-
-
-
-
 
   return (
     <>
-      <div className="flex flex-col md:flex-row mb-20 h-[80vh]">
-        <div className="flex flex-col w-full md:w-[70%] lg:w-[75%] h-full">
+      <div className="flex flex-col md:flex-row gap-6 px-1 md:px-6 py-6 w-full  mx-auto">
+        <div className="w-full flex flex-col gap-4">
           <VideoPlayer id={selectedVideo} setPlayer={setPlayer} />
-          <Notes player={player} trackingId={trackingId} videoId={selectedVideo}/>
+          <UtilityButtons/>
+          <Notes
+            player={player}
+            trackingId={trackingId}
+            videoId={selectedVideo}
+          />
         </div>
 
-        <div className="w-full md:w-[30%] lg:w-[25%] h-full">
+        <div className="w-full md:w-[35%] lg:w-[35%]">
           <PlaylistNav
             playlistId={playlistId}
             nextPage={nextPage}
@@ -122,9 +116,7 @@ function Tracker() {
             onSelectVideo={setSelectedVideo}
             setPlayer={setPlayer}
             paginatedPlaylistData={items}
-
-            handlePageChange={handlePageChange}     
-
+            handlePageChange={handlePageChange}
             finishedVideos={finishedVideos}
             setFinishedVideo={setFinishedVideo}
             totalVideos={totalVideos}

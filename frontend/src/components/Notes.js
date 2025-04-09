@@ -176,7 +176,7 @@ function Notes({ player, trackingId, videoId }) {
   }, [trackingId, videoId]);
   
   return (
-    <div className="relative mt-5 w-full border border-gray-500 rounded-2xl p-5">
+    <div className="relative w-full border border-gray-500 rounded-md md:rounded-2xl p-5">
   
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl text-white">Notes</h1>
@@ -190,7 +190,7 @@ function Notes({ player, trackingId, videoId }) {
       </div>
 
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
         {notes.map((note, index) => (
          <Note
          key={index}
