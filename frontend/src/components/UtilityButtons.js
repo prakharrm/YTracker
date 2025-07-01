@@ -138,7 +138,7 @@ const SearchButton = ({ addSeachNote }) => {
                     <button
                       onClick={() => {
                         addSeachNote(result.title, result.content);
-                        handleClose()
+                        handleClose();
                       }}
                       className=" flex items-center text-lg rounded-xl bg-[#3d3d3d] hover:bg-[#505050]  py-2 px-4 border border-transparent text-white shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
                       type="button"
@@ -166,9 +166,55 @@ const SearchButton = ({ addSeachNote }) => {
   );
 };
 
-function UtilityButtons({ addSeachNote }) {
+const MarkForLater = ({ selectedVideo, flagVideos, setFlagVideos }) => {
+  const handleClick = () => {
+    if (flagVideos.includes(selectedVideo)) {
+      const updatedFlagList = flagVideos.filter(
+        (videoId) => videoId !== selectedVideo
+      );
+      setFlagVideos(updatedFlagList);
+    } else {
+      const updatedFlagList = [...flagVideos, selectedVideo];
+      setFlagVideos(updatedFlagList);
+    }
+  };
+
+   const isFlagged = flagVideos.includes(selectedVideo);
+
   return (
-    <div className="flex w-full py-5 justify-end">
+    <button
+      onClick={handleClick}
+      className="group flex items-center text-lg rounded-xl bg-[#272727] hover:bg-[#3F3F3F] py-2 px-4 border border-transparent text-white shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+      type="button"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        className="w-5 h-5 mr-2"
+      >
+        <path d="M6 2a1 1 0 0 0-1 1v18l7-5 7 5V3a1 1 0 0 0-1-1H6z" />
+      </svg>
+      <span className="text-white transition-colors duration-200">
+        {isFlagged ? "Unflag Video" : "Flag video for later"} 
+      </span>
+    </button>
+  );
+};
+
+function UtilityButtons({
+  addSeachNote,
+  selectedVideo,
+  flagVideos,
+  setFlagVideos,
+}) {
+  return (
+    <div className="flex w-full py-5 justify-end gap-4">
+      <MarkForLater
+        selectedVideo={selectedVideo}
+        flagVideos={flagVideos}
+        setFlagVideos={setFlagVideos}
+      />
       <SearchButton addSeachNote={addSeachNote} />
     </div>
   );

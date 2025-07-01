@@ -23,7 +23,7 @@ function Tracker() {
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
   const [totalVideos, setTotalVideo] = useState(null);
-
+  const [flagVideos, setFlagVideos] = useState([]) // marked for later video
   const notesRef = useRef();
 
    const handleAddSearchNote = (title, content) => {
@@ -44,7 +44,8 @@ function Tracker() {
           setPrevPage,
           setItems,
           setFinishedVideo,
-          setTotalVideo
+          setTotalVideo,
+          setFlagVideos
         );
       } catch (err) {
         console.error("an error occured: ", err);
@@ -88,7 +89,8 @@ function Tracker() {
         nextPage,
         prevPage,
         selectedVideo,
-        finishedVideos
+        finishedVideos,
+        flagVideos
       );
     }
   }, [
@@ -100,6 +102,7 @@ function Tracker() {
     trackingId,
     playlistId,
     finishedVideos,
+    flagVideos
   ]);
 
   return (
@@ -107,7 +110,7 @@ function Tracker() {
       <div className="flex flex-col md:flex-row gap-6 px-1 md:px-6 py-6 w-full  mx-auto">
         <div className="w-full flex flex-col gap-4">
           <VideoPlayer id={selectedVideo} setPlayer={setPlayer} />
-          <UtilityButtons addSeachNote={handleAddSearchNote} />
+          <UtilityButtons addSeachNote={handleAddSearchNote} selectedVideo={selectedVideo} flagVideos={flagVideos} setFlagVideos={setFlagVideos}/>
           <Notes
           ref={notesRef}
             player={player}
@@ -129,6 +132,7 @@ function Tracker() {
             finishedVideos={finishedVideos}
             setFinishedVideo={setFinishedVideo}
             totalVideos={totalVideos}
+            flagVideos={flagVideos}
           />
         </div>
       </div>

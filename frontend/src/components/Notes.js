@@ -98,7 +98,6 @@ const Notes = ({ player, trackingId, videoId, searchNotes }, ref) => {
   const [notes, setNotes] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
   const debouncedSave = useRef(null);
-  console.log(expandedIndex);
 
   const formatTimestamp = (seconds) => {
     const h = Math.floor(seconds / 3600)

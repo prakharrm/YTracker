@@ -141,7 +141,8 @@ export const fetchNewPlaylist = async (
   setPrevPage,
   setItems,
   setFinishedVideo,
-  setTotalVideo
+  setTotalVideo,
+  setFlagVideos
 ) => {
   try {
     const user = auth.currentUser;
@@ -174,6 +175,7 @@ export const fetchNewPlaylist = async (
       setNextPage(playlistData["next-page"]);
       setPrevPage(playlistData["prev-page"]);
       setFinishedVideo(playlistData["finished-video"]);
+      setFlagVideos(playlistData["flag-videos"]);
     } else {
       setDoc(userPlaylistDocRef, {
         currentVideo: response.data.items[0].id,
@@ -183,6 +185,7 @@ export const fetchNewPlaylist = async (
         "playlist-id": playlistId,
         "user-id": user.uid,
         "finished-video": [],
+        "flag-videos": [],
       });
 
       console.log("response", response);
@@ -232,7 +235,8 @@ export const updateTrackerState = async (
   nextPage,
   prevPage,
   selectedVideo,
-  finishedVideos
+  finishedVideos,
+  flagVideos
 ) => {
   try {
     const user = auth.currentUser;
@@ -251,12 +255,14 @@ export const updateTrackerState = async (
       "tracking-id": trackingId,
       "user-id": user.uid,
       "finished-video": finishedVideos,
+      "flag-videos": flagVideos,
     });
   } catch (err) {
     console.error("error: ", err);
   }
 };
 
+// user search query through search button
 export const searchGemini = async (searchQuery) => {
   const user = auth.currentUser;
 
@@ -273,3 +279,35 @@ export const searchGemini = async (searchQuery) => {
     console.error("error: ", err);
   }
 };
+
+// export const markForLater = async (
+//   trackingId,
+//   playlistId,
+//   currentPage,
+//   nextPage,
+//   prevPage,
+//   selectedVideo,
+//   finishedVideos
+// ) => {
+//   try {
+//     const user = auth.currentUser;
+
+//     if (!user) {
+//       console.error("user not found");
+//     }
+
+//     const userDocRef = doc(db, "user-playlist-info", trackingId);
+
+//     await updateDoc(userDocRef, {
+//       currentVideo: selectedVideo,
+//       "next-page": nextPage,
+//       "playlist-id": playlistId,
+//       "prev-page": prevPage,
+//       "tracking-id": trackingId,
+//       "user-id": user.uid,
+//       "finished-video": finishedVideos,
+//     });
+//   } catch (err) {
+//     console.error("error: ", err);
+//   }
+// };
