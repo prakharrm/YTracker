@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import PlaylistNav from "../components/PlaylistNav";
 import VideoPlayer from "../components/VideoPlayer";
 import Notes from "../components/Notes";
@@ -17,12 +17,20 @@ function Tracker() {
 
   const [items, setItems] = useState([]);
   const [finishedVideos, setFinishedVideo] = useState([]);
-  const [selectedVideo, setSelectedVideo] = useState(); // current video
+  const [selectedVideo, setSelectedVideo] = useState(); // current videos
   const [player, setPlayer] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
   const [totalVideos, setTotalVideo] = useState(null);
+
+  const notesRef = useRef();
+
+   const handleAddSearchNote = (title, content) => {
+    if (notesRef.current) {
+      notesRef.current.addSeachNote(title, content);
+    }
+  };
 
   async function loadPlaylist() {
     if (trackingId && playlistId) {
@@ -99,8 +107,9 @@ function Tracker() {
       <div className="flex flex-col md:flex-row gap-6 px-1 md:px-6 py-6 w-full  mx-auto">
         <div className="w-full flex flex-col gap-4">
           <VideoPlayer id={selectedVideo} setPlayer={setPlayer} />
-          <UtilityButtons/>
+          <UtilityButtons addSeachNote={handleAddSearchNote} />
           <Notes
+          ref={notesRef}
             player={player}
             trackingId={trackingId}
             videoId={selectedVideo}

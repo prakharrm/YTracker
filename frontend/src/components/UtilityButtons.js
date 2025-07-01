@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { searchGemini } from "../utils/playlist";
 
-function UtilityButtons() {
+const SearchButton = ({ addSeachNote }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [result, setResult] = useState(null);
@@ -29,7 +29,7 @@ function UtilityButtons() {
   };
 
   return (
-    <div className="flex w-full py-5 justify-end">
+    <>
       <button
         onClick={handleOpen}
         className="group flex items-center text-lg rounded-xl bg-[#272727] hover:bg-[#3F3F3F] py-2 px-4 border border-transparent text-white shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
@@ -43,7 +43,9 @@ function UtilityButtons() {
         >
           <path d="M12 2a7 7 0 0 0-4.73 12.14c.52.45.73 1.12.55 1.77l-.4 1.37a1 1 0 0 0 .96 1.27h7.14a1 1 0 0 0 .96-1.27l-.4-1.37a2.002 2.002 0 0 1 .55-1.77A7 7 0 0 0 12 2Zm0 18a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z" />
         </svg>
-        <span className="text-white transition-colors duration-200">Search</span>
+        <span className="text-white transition-colors duration-200">
+          Search
+        </span>
       </button>
 
       {isOpen && (
@@ -123,15 +125,51 @@ function UtilityButtons() {
               )}
 
               {!loading && result && (
-                <div className="flex flex-col mt-4">
-                  <h2 className="font-semibold text-2xl mb-2">{result.title}</h2>
-                  <p className="text-gray-300 leading-relaxed">{result.content}</p>
+                <div>
+                  <div className="flex flex-col mt-4">
+                    <h2 className="font-semibold text-2xl mb-2">
+                      {result.title}
+                    </h2>
+                    <p className="text-gray-300 leading-relaxed">
+                      {result.content}
+                    </p>
+                  </div>
+                  <div className="flex w-full justify-end ">
+                    <button
+                      onClick={() => {
+                        addSeachNote(result.title, result.content);
+                        handleClose()
+                      }}
+                      className=" flex items-center text-lg rounded-xl bg-[#3d3d3d] hover:bg-[#505050]  py-2 px-4 border border-transparent text-white shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+                      type="button"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-5 h-5 mr-2"
+                      >
+                        <path d="M12 5c.552 0 1 .448 1 1v5h5c.552 0 1 .448 1 1s-.448 1-1 1h-5v5c0 .552-.448 1-1 1s-1-.448-1-1v-5H6c-.552 0-1-.448-1-1s.448-1 1-1h5V6c0-.552.448-1 1-1z" />
+                      </svg>
+                      <span className="text-white transition-colors duration-200">
+                        Add to notes
+                      </span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
           </div>
         </div>
       )}
+    </>
+  );
+};
+
+function UtilityButtons({ addSeachNote }) {
+  return (
+    <div className="flex w-full py-5 justify-end">
+      <SearchButton addSeachNote={addSeachNote} />
     </div>
   );
 }
