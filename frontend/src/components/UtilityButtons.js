@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { searchGemini } from "../utils/playlist";
+import { Link2 } from "lucide-react";
 
 const SearchButton = ({ addSeachNote }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -179,7 +180,7 @@ const MarkForLater = ({ selectedVideo, flagVideos, setFlagVideos }) => {
     }
   };
 
-   const isFlagged = flagVideos.includes(selectedVideo);
+  const isFlagged = flagVideos.includes(selectedVideo);
 
   return (
     <button
@@ -196,9 +197,74 @@ const MarkForLater = ({ selectedVideo, flagVideos, setFlagVideos }) => {
         <path d="M6 2a1 1 0 0 0-1 1v18l7-5 7 5V3a1 1 0 0 0-1-1H6z" />
       </svg>
       <span className="text-white transition-colors duration-200">
-        {isFlagged ? "Unflag Video" : "Flag video for later"} 
+        {isFlagged ? "Unflag Video" : "Flag video for later"}
       </span>
     </button>
+  );
+};
+
+const Resources = ({ videoResource }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const itemCount = videoResource?.itemCount || videoResource?.items?.length || 0;
+  const items = videoResource?.items || [];
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative inline-block text-left" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="group flex gap-2 items-center text-lg rounded-xl bg-[#272727] hover:bg-[#3F3F3F] py-2 px-4 border border-transparent text-white shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+        type="button"
+      >
+        <Link2 className="w-5 h-5 text-white" />
+        <span>Resources</span>
+        {itemCount > 0 && (
+          <div className="flex items-center justify-center text-sm bg-white h-5 w-5 rounded-2xl ml-1">
+            <span className="text-[#242424] font-medium">{itemCount}</span>
+          </div>
+        )}
+      </button>
+
+      {isOpen && itemCount > 0 && (
+        <div className="absolute p-2 right-0 z-10 mt-2 w-96 origin-top-right rounded-xl bg-[#1e1e1e]/90 backdrop-blur-md shadow-xl ring-1 ring-white/10 border border-white/10">
+          <ul className="py-2 text-sm text-white space-y-1">
+            {items.map((resource, index) => (
+              <li key={index}>
+                <a
+                  href={resource.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 hover:bg-[#3a3a3a] hover:scale-[1.02]"
+                >
+                  <div className="rounded-full shadow-sm">
+                    <img
+                      src={`https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${resource.link}&size=16`}
+                      alt="favicon"
+                      className="w-5 h-5"
+                    />
+                  </div>
+                  <p className="underline underline-offset-4 decoration-gray-400 group-hover:decoration-white transition-all">
+                    {resource.name}
+                  </p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -207,9 +273,11 @@ function UtilityButtons({
   selectedVideo,
   flagVideos,
   setFlagVideos,
+  videoResource
 }) {
   return (
     <div className="flex w-full py-5 justify-end gap-4">
+      <Resources videoResource={videoResource} />
       <MarkForLater
         selectedVideo={selectedVideo}
         flagVideos={flagVideos}

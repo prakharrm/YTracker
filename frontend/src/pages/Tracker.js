@@ -10,7 +10,7 @@ import {
   fetchPlaylistId,
 } from "../utils/playlist";
 import UtilityButtons from "../components/UtilityButtons";
-
+import { fetchResources } from "../utils/utilities";
 function Tracker() {
   const { trackingId } = useParams();
   const [playlistId, setPlaylistId] = useState(null);
@@ -23,10 +23,11 @@ function Tracker() {
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
   const [totalVideos, setTotalVideo] = useState(null);
-  const [flagVideos, setFlagVideos] = useState([]) // marked for later video
+  const [flagVideos, setFlagVideos] = useState([]); // flag video to watch later
+  const [videoResource, setVideoResource] = useState(null);
   const notesRef = useRef();
 
-   const handleAddSearchNote = (title, content) => {
+  const handleAddSearchNote = (title, content) => {
     if (notesRef.current) {
       notesRef.current.addSeachNote(title, content);
     }
@@ -102,17 +103,44 @@ function Tracker() {
     trackingId,
     playlistId,
     finishedVideos,
-    flagVideos
+    flagVideos,
   ]);
+
+  //using delay to prevent unnecessary backend calls if the user is just going through videos and not actually watching the video
+  useEffect(() => {
+    if (!selectedVideo) return;
+
+    const delay = setTimeout(() => {
+      fetchResources(selectedVideo)
+        .then((data) => {
+          if (data && Array.isArray(data.items)) {
+            setVideoResource(data);
+          } else {
+            console.warn("Invalid resource format", data);
+            setVideoResource(null);
+          }
+        })
+        .catch((err) => console.error("Failed to fetch resources:", err));
+    }, 5000); // 5 sec delay
+
+    return () => clearTimeout(delay);
+  }, [selectedVideo]);
+
 
   return (
     <>
       <div className="flex flex-col md:flex-row gap-6 px-1 md:px-6 py-6 w-full  mx-auto">
         <div className="w-full flex flex-col gap-4">
           <VideoPlayer id={selectedVideo} setPlayer={setPlayer} />
-          <UtilityButtons addSeachNote={handleAddSearchNote} selectedVideo={selectedVideo} flagVideos={flagVideos} setFlagVideos={setFlagVideos}/>
+          <UtilityButtons
+            addSeachNote={handleAddSearchNote}
+            selectedVideo={selectedVideo}
+            flagVideos={flagVideos}
+            setFlagVideos={setFlagVideos}
+            videoResource={videoResource}
+          />
           <Notes
-          ref={notesRef}
+            ref={notesRef}
             player={player}
             trackingId={trackingId}
             videoId={selectedVideo}

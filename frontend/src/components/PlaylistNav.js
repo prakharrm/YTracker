@@ -12,7 +12,6 @@ function VideoNav(
   flagVideos,
 ) {
   const isFlagged = (flagVideos).includes(id);
-  console.log(isFlagged)
   const isChecked = finishedVideos.includes(id);
 
   return (

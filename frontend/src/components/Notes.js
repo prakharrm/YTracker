@@ -138,7 +138,6 @@ const Notes = ({ player, trackingId, videoId, searchNotes }, ref) => {
       const updatedNotes = [...notes, newNote];
       setNotes(updatedNotes);
       setExpandedIndex(updatedNotes.length - 1);
-      console.log("added search note:", title, content);
     } else {
       console.error("YouTube Player not initialized yet!");
     }

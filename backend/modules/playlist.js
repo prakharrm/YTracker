@@ -161,7 +161,7 @@ router.get("/get-resources", async (req, res) => {
 
     const prompt = `
 Context: This is a feature of a YouTube playlist tracker that helps users extract **educational resources** from video descriptions. Your task is to extract only **educational and technical resource links** shared by the video creator.
-You're given a YouTube video description below. also read the context of the around the links.. looks for educational works like learning, notes, PDFs, sheet. Also with names in json include the contextual title like GIthub - DSA Sheet
+You're given a YouTube video description below. also read the context of the around the links.. looks for educational works like learning, notes, PDFs, sheet. Also with names in json include the contextual title like GIthub - DSA Sheet, and if there are no context, add according to you with what it could possibly contain in one or two words
 ---
 Include links that match the following patterns:
 - **Google Drive / Google Docs / Sheets / Slides / Forms** (e.g., \`drive.google.com\`, \`docs.google.com\`)
@@ -208,8 +208,11 @@ ${description}
       console.error("Failed to parse Gemini response:", parseErr);
       return res.status(500).json({ error: "Failed to parse AI response" });
     }
-
-    return res.json(parsedData);
+    const processedData = {
+      itemCount : parsedData.items.length,
+      items : parsedData.items
+    }
+    return res.json(processedData);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
