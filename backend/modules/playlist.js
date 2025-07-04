@@ -6,7 +6,7 @@ dotenv.config();
 const router = Router();
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API });
 
-router.get("/api/title", async (req, res) => {
+router.get("/title", async (req, res) => {
   try {
     const { playlistId } = req.query;
     if (!playlistId) {
@@ -79,7 +79,7 @@ router.get("/tracker/:trackingId", async (req, res) => {
   }
 });
 
-router.get("/api/change-playlist-page", async (req, res) => {
+router.get("/change-playlist-page", async (req, res) => {
   try {
     const { playlistId, token } = req.query;
 

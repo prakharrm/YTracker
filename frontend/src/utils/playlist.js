@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { doc, setDoc, updateDoc, getDoc, arrayUnion } from "firebase/firestore";
 import axios from "axios";
 
+const BASE_URL = `https://ytracker-uohc.onrender.com/api`
+
 export const fetchPlaylistId = async (trackingId) => {
   const user = auth.currentUser;
 
@@ -58,7 +60,7 @@ export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
 
   //fetching playlist title
 
-  const response = await axios.get(`http://localhost:5000/api/title`, {
+  const response = await axios.get(`${BASE_URL}/title`, {
     params: { playlistId },
   });
 
@@ -164,7 +166,7 @@ export const fetchNewPlaylist = async (
     }
 
     const response = await axios.get(
-      `http://localhost:5000/tracker/${trackingId}`,
+      `${BASE_URL}/${trackingId}`,
       {
         params: { playlistId },
       }
@@ -216,7 +218,7 @@ export const changePlaylistPage = async (
     console.error("user not found");
   }
   const response = await axios.get(
-    `http://localhost:5000/api/change-playlist-page`,
+    `${BASE_URL}/change-playlist-page`,
     {
       params: { playlistId, token },
     }
@@ -271,7 +273,7 @@ export const searchGemini = async (searchQuery) => {
   }
 
   try {
-    const response = await axios.get(`http://localhost:5000/search`, {
+    const response = await axios.get(`${BASE_URL}/search`, {
       params: { searchQuery },
     });
     return response.data;
