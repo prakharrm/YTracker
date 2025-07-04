@@ -1,4 +1,3 @@
-import React from "react";
 import { signInWithGoogle } from "../auth";
 
 export function DialogWithForm({ open, onClose }) {

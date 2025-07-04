@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { doc, setDoc, updateDoc, getDoc, arrayUnion } from "firebase/firestore";
 import axios from "axios";
 
-const BASE_URL = `https://ytracker-uohc.onrender.com/api`
+const BASE_URL = `https://ytracker-uohc.onrender.com/api`;
 
 export const fetchPlaylistId = async (trackingId) => {
   const user = auth.currentUser;
@@ -105,6 +105,8 @@ export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
       return {
         success: true,
         message: "Playlist added successfully!",
+        trackingId: trackingId,
+        playlistId: playlistId,
       };
     } else {
       return {
@@ -165,12 +167,9 @@ export const fetchNewPlaylist = async (
       return;
     }
 
-    const response = await axios.get(
-      `${BASE_URL}/${trackingId}`,
-      {
-        params: { playlistId },
-      }
-    );
+    const response = await axios.get(`${BASE_URL}/tracker/${trackingId}`, {
+      params: { playlistId },
+    });
 
     if (userPlaylistSnap.exists() && user.uid === data["user-id"]) {
       setSelectedVideo(playlistData["currentVideo"]);
@@ -217,12 +216,9 @@ export const changePlaylistPage = async (
   if (!user) {
     console.error("user not found");
   }
-  const response = await axios.get(
-    `${BASE_URL}/change-playlist-page`,
-    {
-      params: { playlistId, token },
-    }
-  );
+  const response = await axios.get(`${BASE_URL}/change-playlist-page`, {
+    params: { playlistId, token },
+  });
   setCurrentPage(token);
   setNextPage(response.data.nextPageToken);
   setPrevPage(response.data.prevPageToken);

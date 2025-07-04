@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
 import logo from "../Ytracker logo.png";
 import ProfileModal from "./ProfileModal";
-import { auth, db } from "../firebase-config";
+import { auth} from "../firebase-config";
 
 function Navbar({ onSignInClick }) {
   const user = auth.currentUser;

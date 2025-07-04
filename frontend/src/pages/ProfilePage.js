@@ -1,6 +1,4 @@
-import React from 'react'
 import Profile from "../components/Profile";
-import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
   return (
