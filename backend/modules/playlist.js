@@ -31,8 +31,6 @@ router.get("/title", async (req, res) => {
     const videoCount = playlist.contentDetails?.itemCount || 0;
     const playlistCover = playlist.snippet?.thumbnails?.medium?.url || "";
 
-    console.log({ title: playlistTitle, cover: playlistCover, videoCount });
-
     res.json({ title: playlistTitle, cover: playlistCover, videoCount });
   } catch (error) {
     console.error("Error:", error);
@@ -209,9 +207,9 @@ ${description}
       return res.status(500).json({ error: "Failed to parse AI response" });
     }
     const processedData = {
-      itemCount : parsedData.items.length,
-      items : parsedData.items
-    }
+      itemCount: parsedData.items.length,
+      items: parsedData.items,
+    };
     return res.json(processedData);
   } catch (error) {
     console.error("Error:", error);
