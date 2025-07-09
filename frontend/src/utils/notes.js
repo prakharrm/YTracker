@@ -1,9 +1,9 @@
 import { auth, db } from "../firebase-config";
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
-
+import { getVerifiedUser } from "./user";
 
 export const getNotes = async (trackingId, videoId, setNotes) => {
-  const user = auth.currentUser;
+  const user = getVerifiedUser();
   if (!user?.uid || !videoId) {
     console.error("Error getting the notes ");
     return;
@@ -20,7 +20,7 @@ export const getNotes = async (trackingId, videoId, setNotes) => {
 };
 
 export const trackNotes = async (trackingId, videoId, notes) => {
-  const user = auth.currentUser;
+  const user = getVerifiedUser();
 
   if (!user || !trackingId || !videoId) {
     console.error("Missing user, trackingId, or videoId");

@@ -1,12 +1,14 @@
-import { auth, db } from "../firebase-config";
+import { db } from "../firebase-config";
 import { v4 as uuidv4 } from "uuid";
 import { doc, setDoc, updateDoc, getDoc, arrayUnion } from "firebase/firestore";
+import { getVerifiedUser } from "./user";
 import axios from "axios";
 
-const BASE_URL = `https://ytracker-uohc.onrender.com/api`;
+const BASE_URL =
+  `http://localhost:5000/api` || `https://ytracker-uohc.onrender.com/api`;
 
 export const fetchPlaylistId = async (trackingId) => {
-  const user = auth.currentUser;
+  const user = getVerifiedUser();
 
   if (!user) {
     console.error("user not found");
@@ -36,7 +38,7 @@ export const fetchPlaylistId = async (trackingId) => {
 };
 
 export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
-  const user = auth.currentUser;
+  const user = getVerifiedUser();
 
   if (!user) {
     ensureAuth();
@@ -49,7 +51,8 @@ export const trackeNewPlaylist = async (playlistURI, ensureAuth) => {
   const userDocRef = doc(db, "user-info", user.uid);
   const docSnap = await getDoc(userDocRef);
 
-  const urlParams = new URLSearchParams(playlistURI);
+  const url = new URL(playlistURI);
+  const urlParams = new URLSearchParams(url.search);
   const playlistId = urlParams.get("list");
   if (!playlistId) {
     return {
@@ -149,7 +152,7 @@ export const fetchNewPlaylist = async (
   setFlagVideos
 ) => {
   try {
-    const user = auth.currentUser;
+    const user = getVerifiedUser();
 
     if (!user) {
       console.error("user not found");
@@ -211,7 +214,7 @@ export const changePlaylistPage = async (
   setCurrentPage,
   setItems
 ) => {
-  const user = auth.currentUser;
+  const user = getVerifiedUser();
 
   if (!user) {
     console.error("user not found");
@@ -237,7 +240,7 @@ export const updateTrackerState = async (
   flagVideos
 ) => {
   try {
-    const user = auth.currentUser;
+    const user = getVerifiedUser();
 
     if (!user) {
       console.error("user not found");
@@ -262,7 +265,7 @@ export const updateTrackerState = async (
 
 // user search query through search button
 export const searchGemini = async (searchQuery) => {
-  const user = auth.currentUser;
+  const user = getVerifiedUser();
 
   if (!user) {
     return;
@@ -288,7 +291,7 @@ export const searchGemini = async (searchQuery) => {
 //   finishedVideos
 // ) => {
 //   try {
-//     const user = auth.currentUser;
+//     const user = getVerifiedUser();
 
 //     if (!user) {
 //       console.error("user not found");

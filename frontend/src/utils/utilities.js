@@ -1,12 +1,12 @@
-import { auth } from "../firebase-config";
 import axios from "axios";
+import { getVerifiedUser } from "./user";
 
-const BASE_URL = `https://ytracker-uohc.onrender.com/api`
+const BASE_URL =  `http://localhost:5000/api` || `https://ytracker-uohc.onrender.com/api`;
 
 
 export const fetchResources = async (videoId) => {
   try {
-    const user = auth.currentUser;
+    const user = getVerifiedUser();
 
     if (!user) {
       console.error("user not found");

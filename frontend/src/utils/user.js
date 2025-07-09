@@ -33,6 +33,15 @@ export const ensureUserDoc = async (user) => {
 };
 
 
+export const getVerifiedUser = () => {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("User not signed in.");
+  }
+  return user;
+};
+
+
 export const profile = async () => {
   const user = auth.currentUser;
   if (!user) {
