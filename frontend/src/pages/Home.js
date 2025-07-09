@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import SearchBar from "../components/SearchBar";
-import { initializeAuthListener } from "../utils/user";
 import Profile from "../components/Profile";
 
-function Home({ensureAuth}) {
- 
-
-  
+function Home({ ensureAuth }) {
   return (
-    <div className="flex flex-col items-center min-h-screen w-full pt-52 px-4 text-center">
-      <div className="mb-6 ">
-        <h1 className="text-white font-semibold text-[4rem] md:text-[5rem] leading-tight">
+    <div className="flex flex-col items-center min-h-screen w-full px-4 sm:px-6 md:px-12 pt-32 sm:pt-40 text-center">
+      <div className="mb-10 w-full ">
+        <h1 className="text-white font-semibold text-4xl sm:text-xl md:text-7xl leading-tight md:leading-[1.2]">
           Effortless Playlist Management & Tracking
         </h1>
-        <p className="text-gray-400 text-xl md:text-2xl max-w-[90rem] mx-auto">
-          Seamlessly monitor, manage, and interact with your YouTube playlists—all in one place. 
-          Take notes, save timestamps, and access video summaries with ease. 
+        <p className="text-gray-400 text-base sm:text-lg md:text-xl mt-4 max-w-7xl mx-auto">
+          Seamlessly monitor, manage, and interact with your YouTube playlists—all in one place.
+          Take notes, save timestamps, and access video summaries with ease.
           Enhance your workflow and never lose track of important content again.
         </p>
       </div>
+
       <div className="w-full flex justify-center">
-        <SearchBar ensureAuth={ensureAuth}/>
+        <SearchBar ensureAuth={ensureAuth} />
       </div>
-      <div className="w-full px-6 mt-24">
-        
+
+      <div className="w-full px-0 sm:px-6 mt-20 ">
         <Profile />
       </div>
     </div>

@@ -1,5 +1,4 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"; // Import icons
-import { Progress, Typography } from "@material-tailwind/react";
 
 function VideoNav(
   id,

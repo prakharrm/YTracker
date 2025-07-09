@@ -1,4 +1,4 @@
-import { auth, db } from "../firebase-config";
+import { db } from "../firebase-config";
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { getVerifiedUser } from "./user";
 

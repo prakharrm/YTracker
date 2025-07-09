@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import PlaylistNav from "../components/PlaylistNav";
 import VideoPlayer from "../components/VideoPlayer";
 import Notes from "../components/Notes";
@@ -102,7 +102,6 @@ function Tracker() {
     selectedVideo,
     trackingId,
     playlistId,
-    finishedVideos,
     flagVideos,
   ]);
 
