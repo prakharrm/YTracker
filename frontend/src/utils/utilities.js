@@ -16,8 +16,6 @@ export const fetchResources = async (videoId) => {
         const response = await axios.get(
             `${BASE_URL}/get-resources?videoId=${videoId}`
         )
-
-        console.log(response.data)
         return response.data
     }
   } catch (err) {

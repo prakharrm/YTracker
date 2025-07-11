@@ -3,12 +3,21 @@
   "version": "1.0.0",
   "description": "The backend server of yt playlist tracker",
   "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "build": "echo 'No build step required'"
+  },
   "dependencies": {
     "@google/genai": "^0.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "vercel": "^44.4.1",
     "youtube-transcript": "^1.2.1"
   },
-  "type": "module"
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
 }
