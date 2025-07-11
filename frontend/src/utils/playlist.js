@@ -4,7 +4,7 @@ import { doc, setDoc, updateDoc, getDoc, arrayUnion } from "firebase/firestore";
 import { getVerifiedUser } from "./user";
 import axios from "axios";
 
-const BASE_URL = `https://ytracker-uohc.onrender.com/api`;
+const BASE_URL = `https://ytracker-backend.vercel.app/api`;
 
 export const fetchPlaylistId = async (trackingId) => {
   const user = getVerifiedUser();
