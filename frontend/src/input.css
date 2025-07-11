@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@plugin "daisyui";
+
+body {
+  @apply font-sans bg-[#121212] text-white;
+}
 
 body {
     background-color: #181818;
@@ -12,19 +15,15 @@ body {
     margin: auto;
 }
 
-text-grey {
-    color: #3b3b3b;
-}
-text-white {
-    color: #3b3b3b;
-}
+
+
 /* scroll bar */
 *::-webkit-scrollbar {
     width: 12px;
 }
 
 *::-webkit-scrollbar-track {
-    border-radius: 8px;
+    border-radius: 8px; 
 }
 
 *::-webkit-scrollbar-thumb {

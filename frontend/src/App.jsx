@@ -33,7 +33,7 @@ function App() {
 
   return (
    
-      <div className="text-white min-h-screen">
+      <div className="font-sans text-white min-h-screen">
         <BrowserRouter>
         <Navbar onSignInClick={openSignInModal} />
         <DialogWithForm open={isSignInModalOpen} onClose={closeSignInModal} />
