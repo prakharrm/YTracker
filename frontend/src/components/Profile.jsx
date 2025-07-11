@@ -19,7 +19,7 @@ function CircularProgress({ progress }) {
     </div>
   );
 }
-function PlaylistCard({ title, cover, videoCount, finishedCount = 69, trackingId }) {
+function PlaylistCard({ title, cover, videoCount, finishedCount, trackingId }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -49,15 +49,52 @@ function PlaylistCard({ title, cover, videoCount, finishedCount = 69, trackingId
 
   return (
     <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className="relative w-full max-w-sm rounded-2xl border border-gray-700 bg-[#212121] shadow-md hover:shadow-xl transition-all duration-300"
+      whileHover={{ scale: 1.015 }}
+      whileTap={{ scale: 0.97 }}
+      className="relative w-full max-w-sm rounded-2xl border border-gray-700 bg-[#1d1d1d] shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
     >
-      {/* Dots Menu Button */}
+
+      <div onClick={navigatePlaylist} className="cursor-pointer relative">
+        <img
+          src={cover}
+          alt={title}
+          className="w-full h-48 object-cover rounded-t-2xl"
+        />
+
+
+        <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-full text-xs text-white font-medium">
+          {progress}% complete
+        </div>
+      </div>
+
+      <div className="p-4 space-y-3">
+        <h3
+          className="text-white font-semibold text-base md:text-lg line-clamp-2 leading-tight"
+          title={title}
+        >
+          {title}
+        </h3>
+
+
+        <div className="w-full h-2 rounded-full bg-[#2f2f2f] overflow-hidden">
+          <div
+            className="h-full bg-blue-500 transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+
+        <div className="flex justify-between items-center text-xs text-gray-400">
+          <span>{videoCount} videos</span>
+          <span>{finishedCount} done</span>
+        </div>
+      </div>
+
+
       <div className="absolute top-3 right-3 z-20" id={`menu-${trackingId}`}>
         <button
-          className="p-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition"
+          className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition"
           onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Open playlist menu"
         >
           <MoreVertical size={18} />
         </button>
@@ -65,7 +102,7 @@ function PlaylistCard({ title, cover, videoCount, finishedCount = 69, trackingId
         {menuOpen && (
           <ul
             role="menu"
-            className="absolute right-0 mt-2 z-30 min-w-[180px] rounded-xl border border-gray-700 bg-[#282828] p-2 shadow-xl"
+            className="absolute right-0 mt-2 z-30 min-w-[180px] rounded-xl border border-gray-700 bg-[#282828] p-2 shadow-2xl animate-fade-in"
           >
             <li
               role="menuitem"
@@ -91,33 +128,9 @@ function PlaylistCard({ title, cover, videoCount, finishedCount = 69, trackingId
           </ul>
         )}
       </div>
-
-      {/* Cover Image */}
-      <div onClick={navigatePlaylist} className="cursor-pointer">
-        <img
-          src={cover}
-          alt={title}
-          className="w-full h-48 object-cover rounded-t-2xl"
-        />
-      </div>
-
-      {/* Details */}
-      <div className="p-4">
-        <h3 className="text-white font-semibold text-sm md:text-base line-clamp-2 mb-3">
-          {title}
-        </h3>
-
-        <div className="flex justify-between items-center">
-          <span className="bg-blue-600/20 text-blue-400 text-xs font-medium px-3 py-1 rounded-full">
-            {videoCount} videos
-          </span>
-          <CircularProgress progress={progress} />
-        </div>
-      </div>
     </motion.div>
   );
 }
-
 
 function Profile() {
   const [profileData, setProfileData] = useState(null);
@@ -141,7 +154,7 @@ function Profile() {
                 title={elm.title}
                 cover={elm.cover}
                 videoCount={elm.videoCount}
-                finishedCount={elm.finishedCount || 50}
+                finishedCount={elm.finishedCount}
                 trackingId={elm.trackingId}
               />
             ))}

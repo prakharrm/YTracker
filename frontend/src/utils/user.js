@@ -1,4 +1,4 @@
-import { doc, setDoc, getDoc, runTransaction } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, runTransaction } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase-config";
 
@@ -43,19 +43,14 @@ export const getVerifiedUser = () => {
 
 
 export const profile = async () => {
-  const user = auth.currentUser;
-  if (!user) {
-    console.warn("[profile] No signed‑in user");
-    return null;
-  }
-
+  const user = getVerifiedUser();
   const snap = await getDoc(doc(db, "user-info", user.uid));
   return snap.exists() ? snap.data() : null;
 };
 
 
 export const deletePlaylist = async (trackingId) => {
-  const user = auth.currentUser;
+  const user = getVerifiedUser();
   if (!user) {
     console.warn("[deletePlaylist] No signed‑in user");
     return;
@@ -74,4 +69,33 @@ export const deletePlaylist = async (trackingId) => {
     const updated = playlists.filter((pl) => pl.trackingId !== trackingId);
     tx.update(userDocRef, { playlists: updated });
   });
+};
+
+export const updateFinishedCount = async (trackingId, finishedVideos) => {
+  const user = getVerifiedUser();
+  const userRef = doc(db, "user-info", user.uid);
+
+  try {
+    const snap = await getDoc(userRef);
+    if (snap.exists()) {
+      const data = snap.data();
+      const playlists = data.playlists || [];
+
+      const updatedPlaylists = playlists.map(playlist => {
+        if (playlist.trackingId === trackingId) {
+          return {
+            ...playlist,
+            finishedCount: finishedVideos.length
+          };
+        }
+        return playlist;
+      });
+
+      await updateDoc(userRef, { playlists: updatedPlaylists });
+    } else {
+      console.warn("User document not found.");
+    }
+  } catch (err) {
+    console.error("Error occurred: ", err);
+  }
 };

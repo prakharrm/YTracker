@@ -11,6 +11,7 @@ import {
 } from "../utils/playlist";
 import UtilityButtons from "../components/UtilityButtons";
 import { fetchResources } from "../utils/utilities";
+import { updateFinishedCount } from "../utils/user";
 function Tracker() {
   const { trackingId } = useParams();
   const [playlistId, setPlaylistId] = useState(null);
@@ -25,7 +26,13 @@ function Tracker() {
   const [totalVideos, setTotalVideo] = useState(null);
   const [flagVideos, setFlagVideos] = useState([]); // flag video to watch later
   const [videoResource, setVideoResource] = useState(null);
+
   const notesRef = useRef();
+  const finishedCountCallCountRef = useRef(0);
+  const finishedCountTimeoutRef = useRef(null);
+  const lastFinishedCountRef = useRef(null);
+
+
 
   const handleAddSearchNote = (title, content) => {
     if (notesRef.current) {
@@ -124,6 +131,41 @@ function Tracker() {
 
     return () => clearTimeout(delay);
   }, [selectedVideo]);
+
+  // updating finished in count in user-info doc for profile cards, using 3sec debounce so that user cant call updateFinishedCount more than 10 times at a time
+  useEffect(() => {
+    if (!trackingId || !finishedVideos) return;
+
+    // Check if the same number of finished videos was already updated
+    const currentCount = finishedVideos.length;
+    if (lastFinishedCountRef.current === currentCount) {
+      return;
+    }
+
+    // Check call limit
+    if (finishedCountCallCountRef.current >= 10) {
+      console.warn("Maximum updateFinishedCount calls reached");
+      return;
+    }
+
+    // Clear any pending update
+    if (finishedCountTimeoutRef.current) {
+      clearTimeout(finishedCountTimeoutRef.current);
+    }
+
+    // Debounce backend call
+    finishedCountTimeoutRef.current = setTimeout(() => {
+      updateFinishedCount(trackingId, finishedVideos);
+      finishedCountCallCountRef.current += 1;
+      lastFinishedCountRef.current = currentCount;
+    }, 3000); // 3 second debounce
+
+    return () => {
+      if (finishedCountTimeoutRef.current) {
+        clearTimeout(finishedCountTimeoutRef.current);
+      }
+    };
+  }, [finishedVideos, trackingId]);
 
 
   return (

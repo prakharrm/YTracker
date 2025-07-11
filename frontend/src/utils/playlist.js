@@ -154,27 +154,16 @@ export const fetchNewPlaylist = async (
   try {
     const user = getVerifiedUser();
 
-    if (!user) {
-      console.error("user not found");
-    }
-    const userDocRef = doc(db, "user-info", user.uid);
     const userPlaylistDocRef = doc(db, "user-playlist-info", trackingId);
-
-    const userdocSnap = await getDoc(userDocRef);
     const userPlaylistSnap = await getDoc(userPlaylistDocRef);
 
-    const data = userdocSnap.data();
     const playlistData = userPlaylistSnap.data();
-
-    if (!userdocSnap.exists() || !data["user-id"] === user.uid) {
-      return;
-    }
 
     const response = await axios.get(`${BASE_URL}/tracker/${trackingId}`, {
       params: { playlistId },
     });
 
-    if (userPlaylistSnap.exists() && user.uid === data["user-id"]) {
+    if (userPlaylistSnap.exists()) {
       setSelectedVideo(playlistData["currentVideo"]);
       setNextPage(playlistData["next-page"]);
       setPrevPage(playlistData["prev-page"]);

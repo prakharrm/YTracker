@@ -1,11 +1,23 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import Profile from "../components/Profile";
+import { getVerifiedUser } from "../utils/user";
 
 function Home({ ensureAuth }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    try {
+      const u = getVerifiedUser();
+      setUser(u);
+    } catch (err) {
+      setUser(null); // Not signed in
+    }
+  }, []);
+
   return (
     <div className="flex flex-col items-center min-h-screen w-full px-4 sm:px-6 md:px-12 pt-32 sm:pt-40 text-center">
-      <div className="mb-10 w-full ">
+      <div className="mb-10 w-full">
         <h1 className="text-white font-semibold text-4xl sm:text-xl md:text-7xl leading-tight md:leading-[1.2]">
           Effortless Playlist Management & Tracking
         </h1>
@@ -20,9 +32,11 @@ function Home({ ensureAuth }) {
         <SearchBar ensureAuth={ensureAuth} />
       </div>
 
-      <div className="w-full px-0 sm:px-6 mt-20 ">
-        <Profile />
-      </div>
+      {user && (
+        <div className="w-full px-0 sm:px-6 mt-20">
+          <Profile />
+        </div>
+      )}
     </div>
   );
 }
