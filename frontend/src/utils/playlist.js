@@ -4,8 +4,7 @@ import { doc, setDoc, updateDoc, getDoc, arrayUnion } from "firebase/firestore";
 import { getVerifiedUser } from "./user";
 import axios from "axios";
 
-const BASE_URL =
-  `http://localhost:5000/api` || `https://ytracker-uohc.onrender.com/api`;
+const BASE_URL = `https://ytracker-uohc.onrender.com/api`;
 
 export const fetchPlaylistId = async (trackingId) => {
   const user = getVerifiedUser();
