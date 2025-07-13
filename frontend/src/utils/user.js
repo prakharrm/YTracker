@@ -16,7 +16,7 @@ export const initializeAuthListener = (setUser, setLoading) => {
 
 export const ensureUserDoc = async (user) => {
   if (!user) return;
-
+  
   const userDocRef = doc(db, "user-info", user.uid);
 
   try {
@@ -36,7 +36,7 @@ export const ensureUserDoc = async (user) => {
 export const getVerifiedUser = () => {
   const user = auth.currentUser;
   if (!user) {
-    throw new Error("User not signed in.");
+    return null;
   }
   return user;
 };

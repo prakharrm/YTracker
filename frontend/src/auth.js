@@ -11,6 +11,7 @@ export const signInWithGoogle = async () => {
 export const logout = async () => {
   try {
     await signOut(auth);
+    window.location.reload();
   } catch (err) {
     console.error(err);
   } 
