@@ -1,8 +1,8 @@
 import axios from "axios";
 import { getVerifiedUser } from "./user";
 
-const BASE_URL = `https://ytracker-backend.vercel.app/api`;
-
+const BASE_URL =
+  `http://localhost:5000/api` || `https://ytracker-backend.vercel.app/api`;
 
 export const fetchResources = async (videoId) => {
   try {
@@ -13,10 +13,10 @@ export const fetchResources = async (videoId) => {
     }
 
     if (videoId) {
-        const response = await axios.get(
-            `${BASE_URL}/get-resources?videoId=${videoId}`
-        )
-        return response.data
+      const response = await axios.get(
+        `${BASE_URL}/get-resources?videoId=${videoId}`
+      );
+      return response.data;
     }
   } catch (err) {
     console.error("error fetching playlist: ", err);
