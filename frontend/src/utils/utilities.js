@@ -2,7 +2,7 @@ import axios from "axios";
 import { getVerifiedUser } from "./user";
 
 const BASE_URL =
-  `http://localhost:5000/api` || `https://ytracker-backend.vercel.app/api`;
+  `https://ytracker-backend.vercel.app/api`;
 
 export const fetchResources = async (videoId) => {
   try {

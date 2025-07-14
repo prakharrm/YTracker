@@ -4,21 +4,6 @@ import { profile, deletePlaylist } from "../utils/user";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-function CircularProgress({ progress }) {
-  return (
-    <div className="relative w-9 h-9">
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: `conic-gradient(#22c55e ${progress * 3.6}deg, #2a2a2a 0deg)`,
-        }}
-      />
-      <div className="absolute inset-[3px] bg-[#212121] rounded-full flex items-center justify-center">
-        <span className="text-[10px] text-white font-semibold">{progress}%</span>
-      </div>
-    </div>
-  );
-}
 function PlaylistCard({ title, cover, videoCount, finishedCount, trackingId }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);

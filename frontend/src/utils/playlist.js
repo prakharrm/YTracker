@@ -5,7 +5,7 @@ import { getVerifiedUser } from "./user";
 import axios from "axios";
 
 const BASE_URL =
-  `http://localhost:5000/api` || `https://ytracker-backend.vercel.app/api`;
+  `https://ytracker-backend.vercel.app/api`;
 
 export const fetchPlaylistId = async (trackingId) => {
   const user = getVerifiedUser();
